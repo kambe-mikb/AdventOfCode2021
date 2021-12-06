@@ -71,6 +71,8 @@ Use the binary numbers in your diagnostic report to calculate the oxygen
 generator rating and CO2 scrubber rating, then multiply them together. What is
 the life support rating of the submarine? (Be sure to represent your answer in
 decimal, not binary.)
+
+Your answer is 4474944.
 """
 import typing as T
 
@@ -81,6 +83,26 @@ __all__ = ["getInput"]
 
 def getInput(infile: str) -> T.Generator:
     return (v.rstrip("\n") for v in open(infile))
+
+
+def filter_input(predicate: tuple[str, str], initial_data: list[str]):
+    data = initial_data[:]
+    for col in range(len(data[0])):
+        ones = zeroes = 0
+        for datum in data:
+            if datum[col] == "0":
+                zeroes += 1
+            else:
+                ones += 1
+        data = [*filter(
+            lambda line: line[col] == (
+                predicate[0] if ones < zeroes else predicate[1]
+                ),
+            data
+            )]
+        if len(data) == 1:
+            break
+    return int(data[0], 2)
 
 
 if __name__ == "__main__":
@@ -98,38 +120,9 @@ if __name__ == "__main__":
     #     "00010",
     #     "01010",
     #     ]
-    lines = master_lines = [*getInput("Day03-input.txt")]
-    oxygen = scrubber = 0
-    for col in range(len(lines[0])):
-        ones = zeroes = 0
-        for line in lines:
-            if line[col] == "0":
-                zeroes += 1
-            else:
-                ones += 1
-        lines = [*filter(
-            lambda line: line[col] == ("0" if ones < zeroes else "1"),
-            lines
-            )]
-        print(f"{col}: {len(lines)} = {lines}")
-        if len(lines) == 1:
-            break
-    oxygen = int(lines[0], 2)
-    lines = master_lines
-    for col in range(len(lines[0])):
-        ones = zeroes = 0
-        for line in lines:
-            if line[col] == "0":
-                zeroes += 1
-            else:
-                ones += 1
-        lines = [*filter(
-            lambda line: line[col] == ("1" if ones < zeroes else "0"),
-            lines
-            )]
-        if len(lines) == 1:
-            break
-    scrubber = int(lines[0], 2)
+    lines = [*getInput("Day03-input.txt")]
+    oxygen = filter_input(("0", "1"), lines)
+    scrubber = filter_input(("1", "0"), lines)
 
             
     print(f"{oxygen} * {scrubber} = {oxygen * scrubber}")

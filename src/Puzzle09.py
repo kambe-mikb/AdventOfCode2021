@@ -55,6 +55,7 @@ diagram with a 2 or larger - a total of 5 points.
 Consider only horizontal and vertical lines. At how many points do at least two
 lines overlap?
 
+Count of dangerous points: 5169
 """
 import collections
 import math
@@ -72,19 +73,7 @@ Point = collections.namedtuple("Point", ["x", "y"])
 
 
 if __name__ == "__main__":
-    input = [
-        "0,9 -> 5,9",
-        "8,0 -> 0,8",
-        "9,4 -> 3,4",
-        "2,2 -> 2,1",
-        "7,0 -> 7,4",
-        "6,4 -> 2,0",
-        "0,9 -> 2,9",
-        "3,4 -> 1,4",
-        "0,0 -> 8,8",
-        "5,5 -> 8,2",
-        ]
-    # input = [*getInput("Day04-input.txt")]
+    input = [*getInput("Day05-input.txt")]
 
     maxval = 0
     points = []
@@ -116,7 +105,6 @@ if __name__ == "__main__":
 
     danger_count = 0
     for y in vent_map:
-        print("".join([(f"{x}" if x else ".") for x in y]))
         danger_count += len(y) - y.count(0) - y.count(1)
 
     print(f"\nCount of dangerous points: {danger_count}")

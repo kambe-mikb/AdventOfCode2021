@@ -86,6 +86,7 @@ or larger - now a total of 12 points.
 
 Consider all of the lines. At how many points do at least two lines overlap?
 
+Count of dangerous points: 22083
 """
 import collections
 import math
@@ -103,19 +104,7 @@ Point = collections.namedtuple("Point", ["x", "y"])
 
 
 if __name__ == "__main__":
-    input = [
-        "0,9 -> 5,9",
-        "8,0 -> 0,8",
-        "9,4 -> 3,4",
-        "2,2 -> 2,1",
-        "7,0 -> 7,4",
-        "6,4 -> 2,0",
-        "0,9 -> 2,9",
-        "3,4 -> 1,4",
-        "0,0 -> 8,8",
-        "5,5 -> 8,2",
-        ]
-    # input = [*getInput("Day05-input.txt")]
+    input = [*getInput("Day05-input.txt")]
 
     maxval = 0
     points = []
@@ -146,7 +135,7 @@ if __name__ == "__main__":
             min_x = min(start.x, stop.x)
             max_x = max(start.x, stop.x) + 1
             vent_map[start.y][min_x: max_x] = (
-                [ t + 1 for t in vent_map[start.y][min_x: max_x]]
+                [t + 1 for t in vent_map[start.y][min_x: max_x]]
                 )
         elif start.x == stop.x:  # vertical line
             for row in range(min(start.y, stop.y), max(start.y, stop.y) + 1):
@@ -159,14 +148,9 @@ if __name__ == "__main__":
                     range(start.y, stop.y + step_y, step_y)
                     ):
                 vent_map[y][x] += 1
-        #     for y in vent_map[min(start.y, stop.y): max(start.y, stop.y) + 1]:
-        #         for x in y[min(start.x, stop.x): max(start.x, stop.x) + 1]:
-        #             x += 1
-                    
 
     danger_count = 0
-    for y in vent_map:
-        print("".join([(f"{x}" if x else ".") for x in y]))
-        danger_count += len(y) - y.count(0) - y.count(1)
+    for y_row in vent_map:
+        danger_count += len(y_row) - y_row.count(0) - y_row.count(1)
 
     print(f"\nCount of dangerous points: {danger_count}")

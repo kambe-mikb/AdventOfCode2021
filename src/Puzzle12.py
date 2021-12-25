@@ -81,8 +81,6 @@ lanternfish!
 
 
 """
-import os
-import tempfile
 import typing as T
 
 __author__ = "kambe-mikb"
@@ -95,33 +93,18 @@ def getInput(infile: str) -> T.Generator:
 
 if __name__ == "__main__":
     NUMBER_OF_DAYS = 256
-    table = bytes.maketrans(
-        bytes([0, 1, 2, 3, 4, 5, 6, 7, 8]),
-        bytes([6, 0, 1, 2, 3, 4, 5, 6, 7])
-        )
 
-    fishes = bytes((
-        int(i)
-        for line in getInput("Day06-input.txt")
-        for i in line.split(",")
-        ))
-    print(f"Initial state: {','.join((str(fish) for fish in fishes))}", flush=True)
-    with tempfile.NamedTemporaryFile(dir=".", delete=False) as outfile:
-        outfile.write(fishes)
-        tempfile1 = outfile.name
+    population = [0] * 9  # One slot for each possible counter value
+    for datum in (
+            int(i)
+            for line in getInput("Day06-input.txt") for i in line.split(",")
+            ):
+        population[int(datum)] += 1
 
     for day in range(1, NUMBER_OF_DAYS + 1):
         days = "days:" if day > 1 else "day: "
-        with open(tempfile1, "rb") as infile:
-            with tempfile.NamedTemporaryFile(dir=".", delete=False) as outfile:
-                new_fishes = 0
-                while fishes := infile.read1():
-                    new_fishes += fishes.count(0)
-                    fishes = fishes.translate(table)
-                    outfile.write(fishes)
-                outfile.write(bytes([8]) * new_fishes)
-                tempfile2 = outfile.name
-        os.unlink(tempfile1)
-        tempfile1 = tempfile2
-        print(f"After {day: >4d} {days} {os.stat(tempfile2).st_size}", flush=True)
-    os.unlink(tempfile2)
+        reproducing = population.pop(0)  # Decrementing the counter populations
+        population[6] += reproducing  # Resetting fish that have reproduced
+        population.append(reproducing)  # Adding newly spawned fish
+
+        print(f"Number of fish after {day} {days} {sum(population)}")

@@ -79,6 +79,7 @@ Determine the horizontal position that the crabs can align to using the least
 fuel possible so they can make you an escape route! How much fuel must they
 spend to align to that position?
 
+Optimum Alignment is 473 requiring 98257206 fuel
 """
 import functools
 import typing as T
@@ -94,7 +95,7 @@ def getInput(infile: str) -> T.Generator:
 if __name__ == "__main__":
     positions = [
         int(i)
-        for line in ["16,1,2,0,4,2,7,1,2,14"] for i in line.split(",")
+        for line in getInput("Day07-input.txt") for i in line.split(",")
         ]
     optimum = min(positions)
     consumption = functools.reduce(

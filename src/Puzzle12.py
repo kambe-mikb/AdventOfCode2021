@@ -79,7 +79,7 @@ they take over the entire ocean?
 After 256 days in the example above, there would be a total of 26984457539
 lanternfish!
 
-
+Number of fish after 256 days: 1631629590423
 """
 import typing as T
 
